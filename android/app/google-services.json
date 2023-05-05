@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "26455677460",
+    "project_id": "task-c2790",
+    "storage_bucket": "task-c2790.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:26455677460:android:0ff11b1d5597e0f9a1a501",
+        "android_client_info": {
+          "package_name": "com.example.task_peace_global_llc_atulya"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "26455677460-shn3r8837sl0k4v8hrdhtk70c0b64fku.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEf6HFchrOobqsMo-pFU2CgplNqRYNEiI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "26455677460-shn3r8837sl0k4v8hrdhtk70c0b64fku.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
