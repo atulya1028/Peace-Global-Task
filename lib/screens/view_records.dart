@@ -104,126 +104,132 @@ class _ViewRecordsState extends State<ViewRecords> {
         builder: (context,AsyncSnapshot<QuerySnapshot> snapshot) {
         if(snapshot.hasData) {
           final data = snapshot.data!.docs;
-          return DataTable2(
-              columnSpacing: 12,
-              horizontalMargin: 12,
-              minWidth: 600,
-              columns: [
-            DataColumn(label: Text('Name')),
-            DataColumn(label: Text('Url')),
-            DataColumn(label: Text('City')),
-            DataColumn(label: Text('Delete')),
-            DataColumn(label: Text('Update')),
-          ], rows: data.map((item) {
-            return DataRow(cells: [
-              DataCell(Text(item['fullName'])),
-              DataCell(Image.network(item['url'])),
-              DataCell(Text(item['city'])),
-              DataCell(IconButton(onPressed: () {
-                FirebaseFirestore.instance.collection('users').where('fullName',isEqualTo: item['fullName']).get()
-                    .then((QuerySnapshot querySnapshot) {
-                  querySnapshot.docs.forEach((doc) {
-                    doc.reference.delete();
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+            child: DataTable2(
+                columnSpacing: 12,
+                horizontalMargin: 12,
+                minWidth: 600,
+                bottomMargin: 10,
+                border: TableBorder.all(
+                  style: BorderStyle.solid,
+                  width: 1,
+                ),
+                columns: [
+              DataColumn(label: Text('Name')),
+              DataColumn(label: Text('Url')),
+              DataColumn(label: Text('City')),
+              DataColumn(label: Text('Delete')),
+              DataColumn(label: Text('Update')),
+            ], rows: data.map((item) {
+              return DataRow(cells: [
+                DataCell(Text(item['fullName'])),
+                DataCell(Image.network(item['url'])),
+                DataCell(Text(item['city'])),
+                DataCell(IconButton(onPressed: () {
+                  FirebaseFirestore.instance.collection('users').where('fullName',isEqualTo: item['fullName']).get()
+                      .then((QuerySnapshot querySnapshot) {
+                    querySnapshot.docs.forEach((doc) {
+                      doc.reference.delete();
+                    });
                   });
-                });
-              },icon: Icon(Icons.delete),)),
-              DataCell(IconButton(onPressed: () {
-                showDialog(context: context, builder: (context) {
-                  nameController.text = item['fullName'];
-                  cityController.text = item['city'];
-                  return AlertDialog(
-                    content: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          InkWell(
-                            onTap:() {
-                              _pickImage();
-                            },
-                            child: Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                ClipOval(
-                                  child: Image.network(imageUrl,width: 100,height: 100,fit: BoxFit.fill,scale: 1,),
-                                ),
-                                Positioned(
-                                  left: 70,
-                                  top: 70,
-                                  child: CircleAvatar(
-                                    radius: 15,
-                                    child: Icon(Icons.add),
-                                  ),
-                                )
-                              ],
+                },icon: Icon(Icons.delete),)),
+                DataCell(IconButton(onPressed: () {
+                  showDialog(context: context, builder: (context) {
+                    nameController.text = item['fullName'];
+                    cityController.text = item['city'];
+                    return AlertDialog(
+                      content: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                _pickImage();
+                              },
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                ClipOval(child: Image.network(imageUrl,width: 80,height: 80,)),
+                                  Positioned(
+                                    left: 50,
+                                    top: 50,
+                                    child: CircleAvatar(
+                                      radius: 15,
+                                      child: Icon(Icons.add),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 20,),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 100),
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 40,
-                                  child: TextField(
-                                    controller: nameController,
-                                    decoration: InputDecoration(
-                                        hintText: 'Enter your name',
-                                        contentPadding: EdgeInsets.all(10),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(10),
-                                            borderSide: BorderSide(color: Colors.grey,width: 1)
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(10),
-                                            borderSide: BorderSide(color: Colors.grey,width: 1)
-                                        )
+                            SizedBox(height: 20,),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 100),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 40,
+                                    child: TextField(
+                                      controller: nameController,
+                                      decoration: InputDecoration(
+                                          hintText: 'Enter your name',
+                                          contentPadding: EdgeInsets.all(10),
+                                          enabledBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                              borderSide: BorderSide(color: Colors.grey,width: 1)
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                              borderSide: BorderSide(color: Colors.grey,width: 1)
+                                          )
+                                      ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(height: 20,),
-                                SizedBox(
-                                  height: 40,
-                                  child: TextField(
-                                    controller: cityController,
-                                    decoration: InputDecoration(
-                                        hintText: 'Enter your city',
-                                        contentPadding: EdgeInsets.all(10),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(10),
-                                            borderSide: BorderSide(color: Colors.grey,width: 1)
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(10),
-                                            borderSide: BorderSide(color: Colors.grey,width: 1)
-                                        )
+                                  SizedBox(height: 20,),
+                                  SizedBox(
+                                    height: 40,
+                                    child: TextField(
+                                      controller: cityController,
+                                      decoration: InputDecoration(
+                                          hintText: 'Enter your city',
+                                          contentPadding: EdgeInsets.all(10),
+                                          enabledBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                              borderSide: BorderSide(color: Colors.grey,width: 1)
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                              borderSide: BorderSide(color: Colors.grey,width: 1)
+                                          )
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 20,),
-                          ElevatedButton(onPressed: () {
-                            FirebaseFirestore.instance.collection('users').where('fullName', isEqualTo:item['fullName'])
-                                .get().then((QuerySnapshot querySnapshot) {
-                              querySnapshot.docs.forEach((doc) {
-                                doc.reference.update({
-                                  'fullName': nameController.text,
-                                  'url': imageUrl,
-                                  'city': cityController.text
+                            SizedBox(height: 20,),
+                            ElevatedButton(onPressed: () {
+                              FirebaseFirestore.instance.collection('users').where('fullName', isEqualTo:item['fullName'])
+                                  .get().then((QuerySnapshot querySnapshot) {
+                                querySnapshot.docs.forEach((doc) {
+                                  doc.reference.update({
+                                    'fullName': nameController.text,
+                                    'url': imageUrl,
+                                    'city': cityController.text
+                                  });
                                 });
                               });
-                            });
-                            Navigator.pop(context);
-                          }, child: Text('Submit')),
-                        ],
+                              Navigator.pop(context);
+                            }, child: Text('Submit')),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                });
-              },icon: Icon(Icons.update),)),
-            ]);
-          }
-              ).toList());
+                    );
+                  });
+                },icon: Icon(Icons.update),)),
+              ]);
+            }
+                ).toList()),
+          );
         } else {
           return Center(child: CircularProgressIndicator(),);
         }
