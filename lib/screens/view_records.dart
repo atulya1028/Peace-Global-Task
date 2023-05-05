@@ -23,14 +23,14 @@ class _ViewRecordsState extends State<ViewRecords> {
   final nameController =TextEditingController();
   final cityController =TextEditingController();
 
-  Future<void> _pickImage() async {
+  Future _pickImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
       _cropImage(File(pickedFile.path));
     }
   }
 
-  Future<void> _cropImage(File imageFile) async {
+  Future _cropImage(File imageFile) async {
     final croppedFile = await ImageCropper.platform.cropImage(
       sourcePath: imageFile.path,
       aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
@@ -64,8 +64,30 @@ class _ViewRecordsState extends State<ViewRecords> {
     final fileName = DateTime.now().millisecondsSinceEpoch.toString();
     final reference = storage.ref().child('images/$fileName.jpg');
     final uploadTask = reference.putFile(imageFile);
-    final snapshot = await uploadTask.whenComplete(() {});
+    var _uploadProgress;
+
+    // Listen for state changes in the upload task
+    uploadTask.snapshotEvents.listen((event) {
+      double progress = event.bytesTransferred / event.totalBytes;
+      print('Upload progress: $progress');
+
+      // Update the UI with the upload progress
+      setState(() {
+        // Set a variable to hold the progress value, and show a progress indicator
+        // using the CircularProgressIndicator widget
+        _uploadProgress = progress;
+      });
+    });
+
+    // Wait for the upload task to complete
+    final snapshot = await uploadTask;
     imageUrl = await snapshot.ref.getDownloadURL();
+
+    // Hide the progress indicator by setting the _uploadProgress variable to null
+    setState(() {
+      _uploadProgress = null;
+    });
+
     print(imageUrl);
   }
 
@@ -120,9 +142,8 @@ class _ViewRecordsState extends State<ViewRecords> {
                             child: Stack(
                               clipBehavior: Clip.none,
                               children: [
-                                CircleAvatar(
-                                  radius: 50,
-                                  backgroundImage: NetworkImage(item['url']),
+                                ClipOval(
+                                  child: Image.network(imageUrl,width: 100,height: 100,fit: BoxFit.fill,scale: 1,),
                                 ),
                                 Positioned(
                                   left: 70,
